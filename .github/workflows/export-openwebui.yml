@@ -1,26 +1,30 @@
-name: Export Open WebUI Docker Image
+name: Export Open WebUI from GHCR
 
 on:
-  workflow_dispatch:  # 允许手动触发
+  workflow_dispatch:
 
 jobs:
   export:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code (not needed, but good practice)
-        uses: actions/checkout@v4
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Pull Open WebUI image from Docker Hub
+      - name: Pull Open WebUI image from GHCR
         run: |
-          docker pull ghcr.io/openwebui/openwebui:main
+          docker pull ghcr.io/open-webui/open-webui:main
 
-      - name: Save image as tarball
+      - name: Save as tarball
         run: |
-          docker save openwebui/openwebui:latest -o openwebui-latest.tar
+          docker save ghcr.io/open-webui/open-webui:main -o openwebui-main.tar
 
-      - name: Upload tarball as artifact
+      - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: openwebui-latest-tarball
-          path: openwebui-latest.tar
-          retention-days: 7  # 保留7天，免费账户最大7天
+          name: openwebui-main-tarball
+          path: openwebui-main.tar
+          retention-days: 7
