@@ -12,7 +12,7 @@ jobs:
 
       - name: Pull Open WebUI image from Docker Hub
         run: |
-          docker pull openwebui/openwebui:latest
+          docker pull ghcr.io/openwebui/openwebui:main
 
       - name: Save image as tarball
         run: |
