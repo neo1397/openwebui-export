@@ -1,0 +1,26 @@
+name: Export Open WebUI Docker Image
+
+on:
+  workflow_dispatch:  # 允许手动触发
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code (not needed, but good practice)
+        uses: actions/checkout@v4
+
+      - name: Pull Open WebUI image from Docker Hub
+        run: |
+          docker pull openwebui/openwebui:latest
+
+      - name: Save image as tarball
+        run: |
+          docker save openwebui/openwebui:latest -o openwebui-latest.tar
+
+      - name: Upload tarball as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: openwebui-latest-tarball
+          path: openwebui-latest.tar
+          retention-days: 7  # 保留7天，免费账户最大7天
